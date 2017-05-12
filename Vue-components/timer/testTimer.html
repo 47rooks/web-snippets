@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>A 47 Rooks Test Page</title>
+<script src="../../libs/vue.js"></script>
+<script src="timer.js"></script>
+</head>
+<body>
+  <div id="controls">
+    <div id="example">
+      <f7-timer ref='timer'></f7-timer>
+    </div>
+    <button id="start" onClick="vm.$refs.timer.start();">Start</button>
+    <button id="stop" onClick="vm.$refs.timer.stop();">Stop</button>
+  </div>
+</body>
+<script>
+    var vm = new Vue({
+      el:'#example'
+    });
+</script>
+</html>
