@@ -29,9 +29,8 @@ Vue.component('f7-timer', {
                          //  data.milliseconds variable
 
       if (this.intervalTimer) {
-        clearInterval(this.intervalTimer);
+        return;
       }
-      //this.milliseconds = Number(0);
       this.intervalTimer = setInterval(function() {
                                          self.$data.milliseconds += 1000
                                        },
@@ -40,6 +39,7 @@ Vue.component('f7-timer', {
     stop: function() {
       if (this.intervalTimer) {
         clearInterval(this.intervalTimer);
+        this.intervalTimer = null;
       }
     },
     reset: function() {
