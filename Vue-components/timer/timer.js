@@ -41,6 +41,10 @@ Vue.component('f7-timer', {
       if (this.intervalTimer) {
         clearInterval(this.intervalTimer);
       }
+    },
+    reset: function() {
+      this.stop();
+      this.milliseconds = 0;
     }
   }
 });
