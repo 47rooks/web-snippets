@@ -44,7 +44,7 @@ Vue.component('f7-timer', {
     },
     reset: function() {
       this.stop();
-      this.milliseconds = 0;
+      this.$data.milliseconds = 0;
     }
   }
 });
