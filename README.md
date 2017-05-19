@@ -1,6 +1,6 @@
 # web-snippets
 
-This repository contains a variety fragements of web code such as Vue
+This repository contains a variety fragments of web code such as Vue
 components, CSS, HTML and so on.
 
 ## Usage Notes
