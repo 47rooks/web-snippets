@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>A 47 Rooks Test Page</title>
+<script src="../../libs/vue.js"></script>
+<script src="../../libs/grapheme-splitter.js"></script>
+<script src="wordsearch.js"></script>
+</head>
+<body>
+  <div id="controls">
+    <div id="example">
+      <f7-wordsearch ref='wordsearch'></f7-wordsearch>
+    </div>
+    <button id="start" onClick="vm.$refs.wordsearch.scramble(greekInputWords, false);">Greek Wordsearch</button>
+    <button id="stop" onClick="vm.$refs.wordsearch.scramble(hebrewInputWords, true);">Hebrew Wordsearch</button>
+    <button id="stop" onClick="vm.$refs.wordsearch.scramble(englishInputWords, false);">English Wordsearch</button>
+    <button id="reset" onClick="vm.$refs.wordsearch.reset();">Reset</button>
+  </div>
+</body>
+<script>
+    var greekInputWords = [
+      "Βίβλος",
+      "Δαυὶδ",
+      "γενέσεως",
+      "υἱοῦ",
+      "χριστοῦ",
+      "Ἀβραάμ",
+      "Ἰησοῦ"
+    ];
+    var hebrewInputWords = [
+      "אֱלֹהִ֑ים",
+      "אֵ֥ת",
+      "אָֽרֶץ",
+      "בְּ",
+      "בָּרָ֣א",
+      "הַ",
+      "הָ",
+      "וְ",
+      "רֵאשִׁ֖ית",
+      "שָּׁמַ֖יִם"
+      ];
+    var englishInputWords = [
+      "In",
+      "the",
+      "beginning",
+      "God",
+      "created",
+      "heavens",
+      "and",
+      "earth"
+    ];
+    /*
+    var wsData = {
+
+      Note that the wordList locations require that there not be two words of exactly the same length completely overlapping. Otherwise it would be impossible to uniquely identify the word found.
+
+      wordList
+        startLoc
+          row
+          col
+        endLoc
+          row
+          col
+
+        I need to know exactly which locations on the grid are for each word in the word list. This is because I need to be sure that a word is not crossed off as found just because the user circles a duplicate which is perhaps even just a fragment of another word.
+
+        I also need to know that a word the user found is not in the list at all.
+      grid
+        loc
+          row
+          col
+        grapheme
+
+        wordListId
+        word
+    };
+    */
+    var vm = new Vue({
+      el:'#example'
+    });
+</script>
+</html>
