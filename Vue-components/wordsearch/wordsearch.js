@@ -1,7 +1,7 @@
 /*
  * wordsearch.js v0.1
  * Copyright 47rooks.com 2017
- * Release under MIT License.
+ * Released under MIT License.
  *
  * wordsearch requires vue.js and grapheme-splitter.js to be loaded before it.
  */
@@ -12,7 +12,7 @@ Vue.component('f7-wordsearch', {
       inputWords: null,
       rtl: false,
       gData: null,
-      rowLen: 8
+      rowLen: 0
     }
   },
   computed: {
@@ -42,10 +42,13 @@ Vue.component('f7-wordsearch', {
       this.inputWords = words;
       this.rtl = rtl;
 
-      this.gData = create_wordsearch(this.inputWords,
-                                     this.rtl);
+      var rc = create_wordsearch(this.inputWords,
+                                 this.rtl);
+      this.gData = rc.grid;
+      this.rowLen = rc.size;
       // DEBUG
       console.log('length of grid = ' + this.gData.length);
+
     }
   }
 });
@@ -194,7 +197,7 @@ function create_wordsearch(words, rtl) {
     console.log(p);
     placeOnGrid(grid, p, cols, graphemes);
   } // end of loop through word list
-  return grid;
+  return { grid: grid, size: cols };
 }
 
 /* Check if the word will fit or not.
