@@ -1,0 +1,16 @@
+/* Some pretty formatting for the example */
+body, h1, h2, h3, h4, h5, h6, p, ul, dl, ol, form, fieldset, input, label, table, tbody, tfoot, th, tr, td, textarea, select {
+  font-family: "Accordance", "Droid Serif", Georgia, "Helvetica Neue", helvetica, "lucinda sans unicode", "sans serif";
+  font-weight: normal;
+}
+
+table#puzzleTable {
+  border-width: 1px;
+  border-collapse: collapse;
+  font-size: 26px;
+  width: 50%;
+}
+
+table#puzzleTable td {
+  text-align: center;
+}

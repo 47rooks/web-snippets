@@ -70,6 +70,7 @@ function create_wordsearch(words, rtl) {
   // Set the initial grid size as a square with rows and columns set to the longest word.
   var rows = sp.splitGraphemes(words[0]).length;
   var cols = rows;
+  var allGraphemes = [];
 
   // DEBUG
   console.log('rows=' + rows + ', cols=' + cols);
@@ -91,7 +92,7 @@ function create_wordsearch(words, rtl) {
   for (var i = 0; i < words.length; i++) {
     var graphemes = sp.splitGraphemes(words[i]);
     var wordLen = graphemes.length;
-
+    allGraphemes = allGraphemes.concat(graphemes);
     // DEBUG
     console.log('placing ' + words[i]);
     /* Find the list of valid placements
@@ -197,6 +198,18 @@ function create_wordsearch(words, rtl) {
     console.log(p);
     placeOnGrid(grid, p, cols, graphemes);
   } // end of loop through word list
+
+  /* Loop through the grid and place random graphemes from
+   * the source word list
+   */
+  for (var i=0; i < rows * cols; i++) {
+    console.log('i=' + i + 'grid[i]=' + grid[i]);
+    if (grid[i] == null) {
+      var r = Math.floor(Math.random() * allGraphemes.length);
+      console.log('got a null ' + r);
+      grid[i] = allGraphemes[r];
+    }
+  }
   return { grid: grid, size: cols };
 }
 
