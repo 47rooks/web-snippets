@@ -77,11 +77,15 @@ function create_wordsearch(words, rtl) {
   // Initialize the metrics
   var metrics = { num_words: words.length,
                   size: cols,
+                  numSquares: cols * cols,
+                  numEmpty: 0,
                   horizontal: 0,
                   vertical: 0,
                   diagonal: 0,
                   crossingWords: 0,
                   nonCrossingWords: 0,
+                  averageWordLength: 0.0,
+                  stdevWordLength: 0.0,
                 };
   // DEBUG
   console.log('rows=' + rows + ', cols=' + cols);
@@ -100,10 +104,17 @@ function create_wordsearch(words, rtl) {
            col 0 is the left most and they count up as they go right.
    */
   var grid = [];
+  var wordLens = [], wordLenTotal = 0;
+
   for (var i = 0; i < words.length; i++) {
     var graphemes = sp.splitGraphemes(words[i]);
     var wordLen = graphemes.length;
     allGraphemes = allGraphemes.concat(graphemes);
+
+    // Update metrics
+    wordLens.push(wordLen);
+    wordLenTotal += wordLen;
+
     // DEBUG
     console.log('placing ' + words[i]);
     /* Find the list of valid placements
@@ -252,8 +263,18 @@ function create_wordsearch(words, rtl) {
       var r = Math.floor(Math.random() * allGraphemes.length);
       console.log('got a null ' + r);
       grid[i] = allGraphemes[r];
+      metrics.numEmpty++;
     }
   }
+
+  // Update metrics
+  var mean = wordLenTotal / words.length;
+  var sumOfSquares = 0.0;
+  for (var i=0; i < wordLens.length; i++) {
+    sumOfSquares += Math.pow(wordLens[i] - mean, 2);
+  }
+  metrics.averageWordLength = mean;
+  metrics.stdevWordLength = Math.sqrt(sumOfSquares / mean);
   return { grid: grid, size: cols, metrics: metrics };
 }
 
