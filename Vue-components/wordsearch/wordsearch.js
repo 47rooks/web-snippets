@@ -12,7 +12,8 @@ Vue.component('f7-wordsearch', {
       inputWords: null,
       rtl: false,
       gData: null,
-      rowLen: 0
+      rowLen: 0,
+      metrics: null
     }
   },
   computed: {
@@ -46,9 +47,10 @@ Vue.component('f7-wordsearch', {
                                  this.rtl);
       this.gData = rc.grid;
       this.rowLen = rc.size;
+      this.metrics = rc.metrics;
       // DEBUG
       console.log('length of grid = ' + this.gData.length);
-
+      console.log('Metrics ', this.metrics);
     }
   }
 });
@@ -72,6 +74,15 @@ function create_wordsearch(words, rtl) {
   var cols = rows;
   var allGraphemes = [];
 
+  // Initialize the metrics
+  var metrics = { num_words: words.length,
+                  size: cols,
+                  horizontal: 0,
+                  vertical: 0,
+                  diagonal: 0,
+                  crossingWords: 0,
+                  nonCrossingWords: 0,
+                };
   // DEBUG
   console.log('rows=' + rows + ', cols=' + cols);
 
@@ -99,7 +110,8 @@ function create_wordsearch(words, rtl) {
      * Each placement is an object with four attributes:
      *    { sx, sy, ex, ey }
      */
-    var placements = [];
+    var placements = { crossing: [],
+                       nonCrossing:[] };
     for (var j = 0; j < cols; j++) {
       for (var k = 0; k < rows; k++) {
         // Short circuit loop if the word will not fit
@@ -177,11 +189,18 @@ function create_wordsearch(words, rtl) {
             }
 
             // Create a placement entry and store it
-            if (fits) {
-              placements.push({ sx: sx,
-                                sy: sy,
-                                ex: ex,
-                                ey: ey });
+            if (fits.noConflict) {
+              if (fits.crossings > 0) {
+                placements.crossing.push({ sx: sx,
+                                           sy: sy,
+                                           ex: ex,
+                                           ey: ey });
+              } else {
+                placements.nonCrossing.push({ sx: sx,
+                                              sy: sy,
+                                              ex: ex,
+                                              ey: ey });
+              }
             }
           }
         }
@@ -189,14 +208,39 @@ function create_wordsearch(words, rtl) {
     }  // end of finding all possible placements for a word
 
     // Choose a placement at random and put it into the grid
-    console.log('num placements=' + placements.length);
-    var r = Math.floor(Math.random() * placements.length);
-    console.log(r);
-    var p = placements[r];
-    // DEBUG
-    console.log('Placement for ' + words[i] + ' is :');
-    console.log(p);
-    placeOnGrid(grid, p, cols, graphemes);
+    var p = null;
+    if (placements.crossing.length > 0) {
+      console.log('num crossing placements=' + placements.crossing.length);
+      var r = Math.floor(Math.random() * placements.crossing.length);
+      console.log(r);
+      var p = placements.crossing[r];
+
+      metrics.crossingWords++;
+    } else {
+      console.log('num non-crossing placements=' + placements.nonCrossing.length);
+      var r = Math.floor(Math.random() * placements.nonCrossing.length);
+      console.log(r);
+      var p = placements.nonCrossing[r];
+
+      metrics.nonCrossingWords++;
+    }
+    if (p) {
+      // DEBUG
+      console.log('Placement for ' + words[i] + ' is :');
+      console.log(p);
+      placeOnGrid(grid, p, cols, graphemes);
+      // update placement metrics
+      if (p.sx === p.ex) {
+        metrics.vertical++;
+      } else if (p.sy === p.ey) {
+        metrics.horizontal++;
+      } else {
+        metrics.diagonal++;
+      }
+    } else {
+      console.log('no placement possible for ' +
+                  words[i]);
+    }
   } // end of loop through word list
 
   /* Loop through the grid and place random graphemes from
@@ -210,7 +254,7 @@ function create_wordsearch(words, rtl) {
       grid[i] = allGraphemes[r];
     }
   }
-  return { grid: grid, size: cols };
+  return { grid: grid, size: cols, metrics: metrics };
 }
 
 /* Check if the word will fit or not.
@@ -232,22 +276,27 @@ function fitsHorizontally(x, rtl, len, cols) {
  * start and end coordinates without conflicting in
  * any location.
  * Returns true if there are no conflicts, false
- * otherwise.
+ * otherwise. If true it will also return whether there is
+ * an intersection with an existing word.
  */
 function checkNoConflict(sx, sy,
                          ex, ey,
                          rowLen, grid,
                          graphemes) {
   var x = sx, y = sy;
+  var crossings = 0;
   for (var i = 0; i < graphemes.length; i++) {
-    if (grid[coordsToIndex(x, y, rowLen)] != null &&
-        grid[coordsToIndex(x, y, rowLen)] !== graphemes[i]) {
-      return false;
+    if (grid[coordsToIndex(x, y, rowLen)] != null) {
+      if (grid[coordsToIndex(x, y, rowLen)] !== graphemes[i]) {
+        return false;
+      } else {
+        crossings++;
+      }
     }
     x = ex > sx ? x + 1 : sx > ex ? x - 1: x;
     y = sy != ey ? y + 1: y;
   }
-  return true;
+  return { noConflict: true, crossings: crossings };
 }
 
 /* Convert a grid coordinate to an array index given the
