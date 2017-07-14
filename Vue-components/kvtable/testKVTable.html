@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>A 47 Rooks Test Page</title>
+<script src="../../libs/vue.js"></script>
+<script src="kvtable.js"></script>
+<link rel="stylesheet" type="text/css" href="kvtable.css">
+</head>
+<body>
+  <div id="controls">
+    <div id="example">
+      <f7-kvtable ref='kvTab'></f7-kvtable>
+    </div>
+    <button id="set" onClick="vm.$refs.kvTab.set(metrics);">Basic Metrics</button>
+  </div>
+</body>
+<script>
+var metrics = {
+                heading: "Wordsearch Metrics",
+                kv: [
+                  { k: "Number of words", v: 12 },
+                  { k: "Size", v: 10 },
+                  { k: "Number of squares", v: 100 },
+                  { k: "Number of empty squares", v: 27 },
+                  { k: "Horiontal words", v: 5 },
+                  { k: "Vertical words", v: 4 },
+                  { k: "Diagonal words", v: 3 },
+                  { k: "Crossing words", v: 6 },
+                  { k: "Non-crossing words", v: 6 },
+                  { k: "Average word length", v: 7.23 },
+                  { k: "Std deviation of word length", v: 3.456 },
+                ]
+              };
+
+    var vm = new Vue({
+      el:'#example'
+    });
+</script>
+</html>
