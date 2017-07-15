@@ -12,7 +12,7 @@
        <table id="kvTable">
          <tr v-for="elt in kv">
            <td> {{elt.k}} </td>
-           <td> {{elt.v}} </td>
+           <td class="number"> {{elt.v}} </td>
          </tr>
        </table>
      </div>`,
