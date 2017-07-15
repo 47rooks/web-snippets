@@ -12,7 +12,8 @@
        <table id="kvTable">
          <tr v-for="elt in kv">
            <td> {{elt.k}} </td>
-           <td class="number"> {{elt.v}} </td>
+           <td class="number" v-if="!isNaN(parseFloat(elt.v)) && isFinite(elt.v)"> {{elt.v}} </td>
+           <td v-else> {{elt.v}} </td>
          </tr>
        </table>
      </div>`,
